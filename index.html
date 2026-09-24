@@ -24,7 +24,7 @@
 
     .container {
       width: 100%;
-      max-width: 850px;
+      max-width: 900px;
       display: flex;
       flex-direction: column;
       gap: 24px;
@@ -260,6 +260,22 @@
       background-color: #047857;
     }
 
+    .btn-toggle {
+      background-color: #d97706;
+      color: #fff;
+      border: none;
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-toggle:hover {
+      background-color: #b45309;
+    }
+
     .btn-del {
       background-color: #ff3b30;
       color: #fff;
@@ -334,7 +350,7 @@
               <th style="width: 40px;">No</th>
               <th>Serial Number</th>
               <th>Status Penggunaan</th>
-              <th style="text-align: center; width: 110px;">Aksi</th>
+              <th style="text-align: center; width: 160px;">Aksi</th>
             </tr>
           </thead>
           <tbody id="licenseTableBody">
@@ -380,7 +396,7 @@
       });
     }
 
-    // MEMUAT DAFTAR SERIAL KEY
+    // MEMUAT DAFTAR SERIAL KEY DENGAN PENGECEKAN AKTIVASI INDIVIDUAL
     async function loadTable() {
       const pwd = document.getElementById('adminPassword').value.trim();
       const { productId } = getSelectedProduct();
@@ -407,7 +423,8 @@
 
         const product = data.products?.find(p => p.id === productId);
         const manualKeys = product?.manualKeys || [];
-        const registeredDevices = product?.registeredDevices || [];
+        const registeredDevices = product?.registeredManualDevices || product?.registeredDevices || {};
+        const usedManualKeys = product?.usedManualKeys || product?.usedKeys || [];
 
         tbody.innerHTML = '';
 
@@ -417,7 +434,25 @@
         }
 
         manualKeys.forEach((key, index) => {
-          const isUsed = registeredDevices.length > 0;
+          let isUsed = false;
+
+          // 1. Cek di usedManualKeys
+          if (Array.isArray(usedManualKeys) && usedManualKeys.includes(key)) {
+            isUsed = true;
+          }
+
+          // 2. Cek di registeredManualDevices
+          if (!isUsed) {
+            if (typeof registeredDevices === 'object' && registeredDevices !== null) {
+              const devices = registeredDevices[key];
+              if (Array.isArray(devices) && devices.length > 0) {
+                isUsed = true;
+              }
+            }
+          }
+
+          const toggleAction = isUsed ? "RESET_UNUSED" : "SET_USED";
+          const toggleLabel = isUsed ? "Reset" : "Terpakai";
 
           const tr = document.createElement('tr');
           tr.innerHTML = `
@@ -431,6 +466,7 @@
             <td style="text-align: center;">
               <div class="action-group">
                 <button class="btn-copy" onclick="copySerial('${key}', this)">Copy</button>
+                <button class="btn-toggle" onclick="toggleKeyStatus('${key}', '${toggleAction}')">${toggleLabel}</button>
                 <button class="btn-del" onclick="deleteKey('${key}')">Hapus</button>
               </div>
             </td>
@@ -446,7 +482,43 @@
       }
     }
 
-    // AUTOMATIS MUAT TABEL KETIKA PILIHAN DROPDOWN PRODUK BERUBAH
+    // UBAH STATUS SERIAL KEY (RESET / TERPAKAI)
+    async function toggleKeyStatus(keyToToggle, action) {
+      const pwd = document.getElementById('adminPassword').value.trim();
+      if (!pwd) return alert("Masukkan Password Admin Store!");
+
+      const { productId } = getSelectedProduct();
+      const confirmText = action === "RESET_UNUSED" 
+        ? `Reset serial key '${keyToToggle}' menjadi BELUM TERPAKAI agar bisa digunakan di device baru?`
+        : `Tandai serial key '${keyToToggle}' sebagai TERPAKAI DI DEVICE?`;
+
+      if (!confirm(confirmText)) return;
+
+      try {
+        const res = await fetch(`${VERCEL_STORE_URL}/api/admin/add-key`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            adminPassword: pwd,
+            productId: productId,
+            serialKey: keyToToggle,
+            action: action
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          loadTable();
+        } else {
+          alert(`Gagal mengubah status: ${data.message}`);
+        }
+      } catch (err) {
+        alert("Koneksi Error.");
+      }
+    }
+
+    // OTOMATIS MUAT TABEL KETIKA PILIHAN DROPDOWN PRODUK BERUBAH
     document.getElementById('productSelect').addEventListener('change', () => {
       const pwd = document.getElementById('adminPassword').value.trim();
       if (pwd) loadTable();

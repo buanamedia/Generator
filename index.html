@@ -3,153 +3,518 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>License Generator Portal</title>
+  <title>Buana Media Extension Serial Generator</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background-color: #121212;
       color: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       min-height: 100vh;
-      padding: 40px 16px;
+      padding: 30px 16px;
       display: flex;
       justify-content: center;
-      align-items: center;
-      -webkit-tap-highlight-color: transparent;
+      align-items: flex-start;
     }
+
     .container {
       width: 100%;
-      max-width: 800px;
+      max-width: 850px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 30px;
+      gap: 24px;
     }
-    .header-portal {
-      text-align: center;
-    }
-    .header-portal h1 {
-      color: #ff3b30;
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 8px;
-      letter-spacing: 0.5px;
-    }
-    .header-portal p {
-      color: #aaaaaa;
-      font-size: 14px;
-    }
-    
-    .grid-cards {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      width: 100%;
-    }
-    
-    .card-link {
+
+    .card {
       background-color: #1b1b1b;
       border: 1px solid #2a2a2a;
       border-radius: 16px;
-      padding: 32px 24px;
+      padding: 32px 28px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-      text-decoration: none;
-      color: inherit;
+    }
+
+    .header-section {
       display: flex;
       flex-direction: column;
       align-items: center;
-      text-align: center;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-      cursor: pointer;
+      margin-bottom: 28px;
     }
-    
-    .card-link:hover {
-      transform: translateY(-5px);
-      border-color: #ff3b30;
-      box-shadow: 0 12px 35px rgba(255, 59, 48, 0.25);
-    }
-    
-    .card-icon {
-      width: 72px;
-      height: 72px;
-      border-radius: 16px;
+
+    .logo-badge {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #2a2a2a 0%, #151515 100%);
+      border: 2px solid #ff3b30;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
       margin-bottom: 16px;
-      object-fit: contain;
-      background: #242424;
-      padding: 10px;
-      border: 1px solid #333;
+      box-shadow: 0 0 15px rgba(255, 59, 48, 0.3);
+      font-size: 28px;
     }
-    
-    .card-title {
-      font-size: 18px;
+
+    .check-icon {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      background-color: #2ecc71;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #1b1b1b;
+    }
+
+    .check-icon svg {
+      width: 12px;
+      height: 12px;
+      fill: #ffffff;
+    }
+
+    .main-title {
+      color: #ff3b30;
+      font-size: 22px;
       font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 8px;
+      text-align: center;
+      letter-spacing: 0.5px;
     }
-    
-    .card-desc {
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 16px;
+    }
+
+    label {
       font-size: 13px;
-      color: #888888;
-      line-height: 1.4;
+      color: #b0b0b0;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    input[type="password"], select {
+      width: 100%;
+      padding: 14px 16px;
+      background-color: #242424;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: #ff3b30;
+      box-shadow: 0 0 0 2px rgba(255, 59, 48, 0.2);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
       margin-bottom: 20px;
     }
-    
-    .btn-access {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(180deg, #ff1a1a 0%, #d60000 100%);
-      color: #ffffff;
+
+    .btn-login {
+      flex: 1;
+      padding: 15px;
+      background: #2563eb;
+      color: #fff;
+      border: none;
       border-radius: 8px;
       font-size: 14px;
       font-weight: 700;
-      box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
-      margin-top: auto;
+      cursor: pointer;
+      transition: background 0.2s;
     }
 
-    .footer-text {
-      font-size: 12px;
-      color: #555555;
+    .btn-login:hover { background: #1d4ed8; }
+
+    .btn-generate {
+      flex: 1;
+      padding: 15px;
+      background: linear-gradient(180deg, #ff1a1a 0%, #d60000 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(255, 0, 0, 0.35);
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    .btn-generate:hover { opacity: 0.95; }
+    .btn-generate:active { transform: scale(0.99); }
+
+    .result-container {
+      border: 1px dashed #444;
+      border-radius: 8px;
+      padding: 18px;
       text-align: center;
-      margin-top: 10px;
+      background-color: #161616;
+    }
+
+    .result-key {
+      font-size: 20px;
+      font-family: "Courier New", Courier, monospace;
+      font-weight: 700;
+      color: #2ecc71;
+      letter-spacing: 2px;
+      margin-top: 4px;
+    }
+
+    .table-header-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .table-title {
+      color: #00bcd4;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .btn-refresh {
+      background-color: #2a3b4c;
+      color: #fff;
+      border: 1px solid #3a5169;
+      padding: 7px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .table-responsive {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 12px 14px;
+      font-size: 13px;
+      border-bottom: 1px solid #262626;
+      vertical-align: middle;
+    }
+
+    th { background-color: #242424; color: #a0a0a0; font-weight: 600; }
+
+    .serial-cell { color: #2ecc71; font-family: monospace; font-weight: 700; }
+
+    .badge-used {
+      background: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .badge-unused {
+      background: rgba(46, 204, 113, 0.2);
+      color: #2ecc71;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .action-group {
+      display: flex;
+      gap: 4px;
+      justify-content: center;
+    }
+
+    .btn-copy {
+      background-color: #059669;
+      color: #fff;
+      border: none;
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-copy:hover {
+      background-color: #047857;
+    }
+
+    .btn-del {
+      background-color: #ff3b30;
+      color: #fff;
+      border: none;
+      padding: 5px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     @media (max-width: 600px) {
-      .grid-cards { grid-template-columns: 1fr; }
-      body { padding: 24px 16px; }
-      .header-portal h1 { font-size: 22px; }
+      body { padding: 16px 10px; }
+      .card { padding: 24px 16px; }
+      .btn-group { flex-direction: column; }
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <div class="header-portal">
-      <h1>License Generator Manager</h1>
-      <p>Pilih sistem generator lisensi yang ingin Anda kelola</p>
+    <div class="card">
+      
+      <!-- LOGO HEADER BUANA MEDIA -->
+      <div class="header-section">
+        <div class="logo-badge">
+          ⚡
+          <div class="check-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+          </div>
+        </div>
+        <h1 class="main-title">Buana Media Extension Serial Generator</h1>
+      </div>
+
+      <!-- INPUT PASSWORD ADMIN -->
+      <div class="form-group">
+        <label for="adminPassword">Password Admin Vercel Store:</label>
+        <input type="password" id="adminPassword" placeholder="Masukkan Password Admin Store Anda">
+      </div>
+
+      <!-- PILIH EKSTENSI / PRODUK -->
+      <div class="form-group">
+        <label for="productSelect">Pilih Ekstensi / Produk Target:</label>
+        <select id="productSelect">
+          <option value="ext-0001|TRBM">TubeRunner Extension (ext-0001)</option>
+          <option value="ext-0002|YTAF">YT Copyright Auto Fix (ext-0002)</option>
+        </select>
+      </div>
+
+      <!-- GROUP TOMBOL LOGIN & GENERATE -->
+      <div class="btn-group">
+        <button id="btnLogin" class="btn-login" onclick="loadTable()">🔑 Login & Muat Data</button>
+        <button id="btnGenerate" class="btn-generate">⚡ Buat Serial Baru</button>
+      </div>
+
+      <div class="result-container">
+        <div style="font-size:12px; color:#888;">Serial Key Tergenerate:</div>
+        <div id="generatedKey" class="result-key">-- -- -- --</div>
+      </div>
     </div>
 
-    <div class="grid-cards">
-      <!-- OPSI 1: YT AUTO FIXER -->
-      <a href="yt-autofixer.html" class="card-link">
-        <img src="icon/iconytc128.png" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/1384/1384060.png';" alt="YT Auto Fixer Logo" class="card-icon">
-        <div class="card-title">YT Copyright Auto</div>
-        <div class="card-desc">Generator & pengelola lisensi perangkat untuk ekstensi YT Copyright Auto.</div>
-        <div class="btn-access">Buka Generator &rarr;</div>
-      </a>
+    <div class="card">
+      <div class="table-header-wrap">
+        <h2 class="table-title" id="tableTitle">Daftar Stok Serial Key (ext-0001)</h2>
+        <button id="btnRefresh" class="btn-refresh" onclick="loadTable()">🔄 Refresh</button>
+      </div>
 
-      <!-- OPSI 2: TUBERUNNER -->
-      <a href="tuberunner.html" class="card-link">
-        <img src="icon/icontr.png" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/1384/1384060.png';" alt="TubeRunner Logo" class="card-icon">
-        <div class="card-title">TubeRunner</div>
-        <div class="card-desc">Generator & pengelola lisensi perangkat untuk sistem lisensi TubeRunner.</div>
-        <div class="btn-access">Buka Generator &rarr;</div>
-      </a>
-    </div>
-
-    <div class="footer-text">
-      License Management Portal &copy; 2026
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 40px;">No</th>
+              <th>Serial Number</th>
+              <th>Status Penggunaan</th>
+              <th style="text-align: center; width: 110px;">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="licenseTableBody">
+            <tr>
+              <td colspan="4" style="text-align: center; color: #888;">Masukkan Password Admin lalu klik Login.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
+  <script>
+    const VERCEL_STORE_URL = "https://store.buanamedia.my.id";
+
+    // MENGAMBIL PRODUCT ID & PREFIX DARI DROPDOWN SELECT
+    function getSelectedProduct() {
+      const select = document.getElementById('productSelect');
+      const [productId, prefix] = select.value.split('|');
+      return { productId, prefix };
+    }
+
+    // FORMAT SERIAL KEY UNIK SESUAI PREFIX PRODUCT
+    function generateKey(prefix) {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const segment = () => Array.from({length: 4}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+      return `${prefix}-${segment()}-${segment()}-${segment()}`;
+    }
+
+    // FUNGSI COPY SERIAL KEY KE CLIPBOARD
+    function copySerial(keyText, btnElement) {
+      navigator.clipboard.writeText(keyText).then(() => {
+        const originalText = btnElement.innerHTML;
+        btnElement.innerHTML = 'Copied!';
+        btnElement.style.backgroundColor = '#10B981';
+        
+        setTimeout(() => {
+          btnElement.innerHTML = originalText;
+          btnElement.style.backgroundColor = '#059669';
+        }, 1500);
+      }).catch(err => {
+        alert('Gagal meng-copy serial key: ' + err);
+      });
+    }
+
+    // MEMUAT DAFTAR SERIAL KEY
+    async function loadTable() {
+      const pwd = document.getElementById('adminPassword').value.trim();
+      const { productId } = getSelectedProduct();
+      const tbody = document.getElementById('licenseTableBody');
+      const tableTitle = document.getElementById('tableTitle');
+
+      tableTitle.textContent = `Daftar Stok Serial Key (${productId})`;
+
+      if (!pwd) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">Masukkan Password Admin di atas lalu klik Login.</td></tr>';
+        return false;
+      }
+
+      tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#888;">Memverifikasi & memuat data dari Vercel Store...</td></tr>';
+
+      try {
+        const res = await fetch(`${VERCEL_STORE_URL}/api/admin/products?password=${encodeURIComponent(pwd)}`);
+        const data = await res.json();
+
+        if (!res.ok || !data.success) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ff3b30;">${data.message || "Password Salah"}</td></tr>`;
+          return false;
+        }
+
+        const product = data.products?.find(p => p.id === productId);
+        const manualKeys = product?.manualKeys || [];
+        const registeredDevices = product?.registeredDevices || [];
+
+        tbody.innerHTML = '';
+
+        if (manualKeys.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#888;">Belum ada serial key terdaftar untuk produk ${productId}.</td></tr>`;
+          return true;
+        }
+
+        manualKeys.forEach((key, index) => {
+          const isUsed = registeredDevices.length > 0;
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td class="serial-cell">${key}</td>
+            <td>
+              <span class="${isUsed ? 'badge-used' : 'badge-unused'}">
+                ${isUsed ? '🔴 Terpakai di Device' : '🟢 Belum Terpakai'}
+              </span>
+            </td>
+            <td style="text-align: center;">
+              <div class="action-group">
+                <button class="btn-copy" onclick="copySerial('${key}', this)">Copy</button>
+                <button class="btn-del" onclick="deleteKey('${key}')">Hapus</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        return true;
+
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#ff3b30;">Error: ${err.message}</td></tr>`;
+        return false;
+      }
+    }
+
+    // AUTOMATIS MUAT TABEL KETIKA PILIHAN DROPDOWN PRODUK BERUBAH
+    document.getElementById('productSelect').addEventListener('change', () => {
+      const pwd = document.getElementById('adminPassword').value.trim();
+      if (pwd) loadTable();
+    });
+
+    // BUAT SERIAL KEY BARU
+    document.getElementById('btnGenerate').addEventListener('click', async () => {
+      const pwd = document.getElementById('adminPassword').value.trim();
+      if (!pwd) return alert("Masukkan Password Admin Store terlebih dahulu!");
+
+      const { productId, prefix } = getSelectedProduct();
+      const newKey = generateKey(prefix);
+
+      try {
+        const res = await fetch(`${VERCEL_STORE_URL}/api/admin/add-key`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            adminPassword: pwd,
+            productId: productId,
+            serialKey: newKey
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          document.getElementById('generatedKey').textContent = newKey;
+          loadTable();
+        } else {
+          alert(`Gagal: ${data.message}`);
+        }
+      } catch (err) {
+        alert(`Koneksi Error: ${err.message}`);
+      }
+    });
+
+    // HAPUS SERIAL KEY
+    async function deleteKey(keyToDelete) {
+      const pwd = document.getElementById('adminPassword').value.trim();
+      if (!pwd) return alert("Masukkan Password Admin Store!");
+
+      const { productId } = getSelectedProduct();
+
+      if (!confirm(`Hapus serial key '${keyToDelete}' dari produk ${productId}?`)) return;
+
+      try {
+        const res = await fetch(`${VERCEL_STORE_URL}/api/admin/add-key`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            adminPassword: pwd,
+            productId: productId,
+            serialKey: keyToDelete
+          })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          loadTable();
+        } else {
+          alert(`Gagal menghapus: ${data.message}`);
+        }
+      } catch (err) {
+        alert("Koneksi Error.");
+      }
+    }
+  </script>
 </body>
 </html>
